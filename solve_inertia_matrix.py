@@ -1,3 +1,4 @@
+import sys
 from sympy import *
 
 f12 = Rational(1, 2)
@@ -67,6 +68,17 @@ y1 = l1_ * sin(q1_)
 y2 = l1_ * sin(q1_) + l2_ * sin(q1_ + q2_)
 y3 = l1_ * sin(q1_) + l2_ * sin(q1_ + q2_) + l3_ * sin(q1_ + q2_ + q3_)
 
+q1sym = symbols("q1", real=True)
+q2sym = symbols("q2", real=True)
+q3sym = symbols("q3", real=True)
+
+J = [[x3.diff(q1), x3.diff(q2), x3.diff(q3)],
+     [y3.diff(q1), y3.diff(q2), y3.diff(q3)]]
+J = [[d.subs(q1, q1sym).subs(q2, q2sym).subs(q3, q3sym) for d in r] for r in J]
+print(J)
+
+sys.exit(0)
+
 x1g = f12 * l1_ * cos(q1_)
 x2g = l1_ * cos(q1_) + f12 * l2_ * cos(q1_ + q2_)
 x3g = l1_ * cos(q1_) + l2_ * cos(q1_ + q2_) + f12 * l3_ * cos(q1_ + q2_ + q3_)
@@ -109,10 +121,6 @@ ddiffq3 = diffq3.diff(t)
 a1 = var("a1", real=True)
 a2 = var("a2", real=True)
 a3 = var("a3", real=True)
-
-q1sym = symbols("q1", real=True)
-q2sym = symbols("q2", real=True)
-q3sym = symbols("q3", real=True)
 
 pK1 = K.diff(diffq1).diff(t)
 pK1_ = (pK1
@@ -160,9 +168,8 @@ pK3_ = (pK3
         .collect(a2)
         .collect(a3))
 
-
 M = [[pK1_.args[0]/a1, pK1_.args[1]/a2, pK1_.args[2]/a3],
      [pK2_.args[0]/a1, pK2_.args[1]/a2, pK2_.args[2]/a3],
      [pK3_.args[0]/a1, pK3_.args[1]/a2, pK3_.args[2]/a3]]
 
-print(M)
+sys.exit(0)
