@@ -174,6 +174,17 @@ let dynamic_manipulability q z =
   let m = inertia_matrix q z in
   sqrt (det_mat (matmul_mat (matmul_mat j (inv_mat (matmul_mat (trans_mat m) m))) (trans_mat j)))
 
+let eq_mat_test1 =
+  eq_mat
+      (M22 (1., 2., 3., 4.))
+      (M22 (1., 2., 3., 4.))
+    = true
+let eq_mat_test2 =
+  eq_mat
+      (M23 (1., 2., 3., 4., 5., 6.))
+      (M23 (0., 2., 3., 4., 5., 6.))
+    = false
+
 let inv_mat_test1 =
   inv_mat (M33 (1., 0., 0., 0., 1., 0., 0., 0., 1.)) =
     M33 (1., 0., 0., 0., 1., 0., 0., 0., 1.)
