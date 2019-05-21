@@ -17,11 +17,41 @@ let trans_mat m = match m with
   | M22 (m11, m12, m21, m22) ->
       M22 (m11, m21, m12, m22)
 
-(*
 let eq_mat m n = match (m, n) with
-  | 
+  | (M33 (m11, m12, m13, m21, m22, m23, m31, m32, m33),
+     M33 (n11, n12, n13, n21, n22, n23, n31, n32, n33)) ->
+        m11 = n11
+          && m12 = n12
+          && m13 = n13
+          && m21 = n21
+          && m22 = n22
+          && m23 = n23
+          && m31 = n31
+          && m32 = n32
+          && m33 = n33
+  | (M23 (m11, m12, m13, m21, m22, m23),
+     M23 (n11, n12, n13, n21, n22, n23)) ->
+        m11 = n11
+          && m12 = n12
+          && m13 = n13
+          && m21 = n21
+          && m22 = n22
+          && m23 = n23
+  | (M32 (m11, m21, m31, m12, m22, m32),
+     M32 (n11, n21, n31, n12, n22, n32)) ->
+        m11 = n11
+          && m12 = n12
+          && m21 = n21
+          && m22 = n22
+          && m31 = n31
+          && m32 = n32
+  | (M22 (m11, m12, m21, m22),
+     M22 (n11, n12, n21, n22)) ->
+        m11 = n11
+          && m12 = n12
+          && m21 = n21
+          && m22 = n22
   | _, _ -> failwith "shapes not matched"
-*)
 
 let inv_mat m =
   match m with
