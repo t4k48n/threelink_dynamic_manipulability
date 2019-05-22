@@ -1,6 +1,17 @@
 type point_t = Point of float * float
+
+(* check pseudo equality of points p and q *)
+(* eq_point : ?threshold:flaot -> point_t -> point_t -> bool *)
+let eq_point ?(threshold=1E-8) p q =
+  let Point (p1, p2) = p in
+  let Point (q1, q2) = q in
+  Utils.nearly_eq p1 q1 && Utils.nearly_eq p2 q2
+
 type angle_t = Angle of float * float * float
+
 type unc_t = Unc of float * float * float * float * float * float * float * float * float * float
+let unc_det = Unc (0., 0., 0., 0., 0., 0., 0., 0., 0., 0.)
+
 type mat_t =
   | M33 of float * float * float * float * float * float * float * float * float
   | M23 of float * float * float * float * float * float
@@ -17,40 +28,40 @@ let trans_mat m = match m with
   | M22 (m11, m12, m21, m22) ->
       M22 (m11, m21, m12, m22)
 
-let eq_mat m n = match (m, n) with
+let eq_mat ?(threshold=1E-8) m n = match (m, n) with
   | (M33 (m11, m12, m13, m21, m22, m23, m31, m32, m33),
      M33 (n11, n12, n13, n21, n22, n23, n31, n32, n33)) ->
-        m11 = n11
-          && m12 = n12
-          && m13 = n13
-          && m21 = n21
-          && m22 = n22
-          && m23 = n23
-          && m31 = n31
-          && m32 = n32
-          && m33 = n33
+        Utils.nearly_eq ~threshold:threshold m11 n11
+          && Utils.nearly_eq ~threshold:threshold m12 n12
+          && Utils.nearly_eq ~threshold:threshold m13 n13
+          && Utils.nearly_eq ~threshold:threshold m21 n21
+          && Utils.nearly_eq ~threshold:threshold m22 n22
+          && Utils.nearly_eq ~threshold:threshold m23 n23
+          && Utils.nearly_eq ~threshold:threshold m31 n31
+          && Utils.nearly_eq ~threshold:threshold m32 n32
+          && Utils.nearly_eq ~threshold:threshold m33 n33
   | (M23 (m11, m12, m13, m21, m22, m23),
      M23 (n11, n12, n13, n21, n22, n23)) ->
-        m11 = n11
-          && m12 = n12
-          && m13 = n13
-          && m21 = n21
-          && m22 = n22
-          && m23 = n23
+        Utils.nearly_eq ~threshold:threshold m11 n11
+          && Utils.nearly_eq ~threshold:threshold m12 n12
+          && Utils.nearly_eq ~threshold:threshold m13 n13
+          && Utils.nearly_eq ~threshold:threshold m21 n21
+          && Utils.nearly_eq ~threshold:threshold m22 n22
+          && Utils.nearly_eq ~threshold:threshold m23 n23
   | (M32 (m11, m21, m31, m12, m22, m32),
      M32 (n11, n21, n31, n12, n22, n32)) ->
-        m11 = n11
-          && m12 = n12
-          && m21 = n21
-          && m22 = n22
-          && m31 = n31
-          && m32 = n32
+        Utils.nearly_eq ~threshold:threshold m11 n11
+          && Utils.nearly_eq ~threshold:threshold m12 n12
+          && Utils.nearly_eq ~threshold:threshold m21 n21
+          && Utils.nearly_eq ~threshold:threshold m22 n22
+          && Utils.nearly_eq ~threshold:threshold m31 n31
+          && Utils.nearly_eq ~threshold:threshold m32 n32
   | (M22 (m11, m12, m21, m22),
      M22 (n11, n12, n21, n22)) ->
-        m11 = n11
-          && m12 = n12
-          && m21 = n21
-          && m22 = n22
+        Utils.nearly_eq ~threshold:threshold m11 n11
+          && Utils.nearly_eq ~threshold:threshold m12 n12
+          && Utils.nearly_eq ~threshold:threshold m21 n21
+          && Utils.nearly_eq ~threshold:threshold m22 n22
   | _, _ -> failwith "shapes not matched"
 
 let inv_mat m =
@@ -173,38 +184,3 @@ let dynamic_manipulability q z =
   let j = jacobian_matrix q z in
   let m = inertia_matrix q z in
   sqrt (det_mat (matmul_mat (matmul_mat j (inv_mat (matmul_mat (trans_mat m) m))) (trans_mat j)))
-
-let eq_mat_test1 =
-  eq_mat
-      (M22 (1., 2., 3., 4.))
-      (M22 (1., 2., 3., 4.))
-    = true
-let eq_mat_test2 =
-  eq_mat
-      (M23 (1., 2., 3., 4., 5., 6.))
-      (M23 (0., 2., 3., 4., 5., 6.))
-    = false
-
-let inv_mat_test1 =
-  inv_mat (M33 (1., 0., 0., 0., 1., 0., 0., 0., 1.)) =
-    M33 (1., 0., 0., 0., 1., 0., 0., 0., 1.)
-let inv_mat_test2 =
-  inv_mat (M33 (1., 0., 0., 0., 2., 0., 0., 0., 3.)) =
-    M33 (1., 0., 0., 0., 1./.2., 0., 0., 0., 1./.3.)
-
-let det_mat_test1 =
-  let m = M22 (1., 0., 0., 1.) in
-  det_mat m = 1.
-let det_mat_test2 =
-  let m = M22 (0., 0., 0., 1.) in
-  det_mat m = 0.
-
-let matmul_test1 =
-  let m = M33 (1., 2., 3., 4., 5., 6., 7., 8., 9.) in
-  matmul_mat m m = M33 (30., 36., 42., 66., 81., 96., 102., 126., 150.)
-let matmul_test2 =
-  let m = M33 (0., 0., 0., 0., 0., 0., 0., 0., 0.) in
-  matmul_mat m m = M33 (0., 0., 0., 0., 0., 0., 0., 0., 0.)
-let matmul_test3 =
-  let m = M33 (1., 1., 1., 1., 1., 1., 1., 1., 1.) in
-  matmul_mat m m = M33 (3., 3., 3., 3., 3., 3., 3., 3., 3.)
