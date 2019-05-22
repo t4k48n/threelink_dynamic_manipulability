@@ -4,3 +4,8 @@
 *.cmx
 main
 test
+*.opt
+.omake*
+*.omc
+*.cmo
+*.run
