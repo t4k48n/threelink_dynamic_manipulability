@@ -1,1 +1,11 @@
 *.swp
+*.o
+*.cmi
+*.cmx
+main
+test
+*.opt
+.omake*
+*.omc
+*.cmo
+*.run

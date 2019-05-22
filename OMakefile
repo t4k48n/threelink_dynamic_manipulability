@@ -1,0 +1,25 @@
+BYTE_ENABLED = false
+NATIVE_ENABLED = true
+
+USE_OCAMLFIND = true
+
+OCAMLPACKS[] =
+  unix
+
+OCamlProgram(main, model utils main)
+
+OCamlProgram(test, test utils model)
+
+MyFunc(x) =
+  .PHONY: $(x)
+  $(x):
+    echo $(x)
+
+MyFunc(myecho)
+
+.PHONY: clean
+
+clean:
+  rm -f main test *.opt *.run *.cm? *.om? *.o
+
+.DEFAULT: main test
