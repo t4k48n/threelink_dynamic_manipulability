@@ -1,1 +1,6 @@
 *.swp
+*.o
+*.cmi
+*.cmx
+main
+test
