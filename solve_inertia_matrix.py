@@ -1,4 +1,3 @@
-import sys
 from sympy import *
 
 f12 = Rational(1, 2)
@@ -75,9 +74,6 @@ q3sym = symbols("q3", real=True)
 J = [[x3.diff(q1), x3.diff(q2), x3.diff(q3)],
      [y3.diff(q1), y3.diff(q2), y3.diff(q3)]]
 J = [[d.subs(q1, q1sym).subs(q2, q2sym).subs(q3, q3sym) for d in r] for r in J]
-print(J)
-
-sys.exit(0)
 
 x1g = f12 * l1_ * cos(q1_)
 x2g = l1_ * cos(q1_) + f12 * l2_ * cos(q1_ + q2_)
@@ -171,5 +167,3 @@ pK3_ = (pK3
 M = [[pK1_.args[0]/a1, pK1_.args[1]/a2, pK1_.args[2]/a3],
      [pK2_.args[0]/a1, pK2_.args[1]/a2, pK2_.args[2]/a3],
      [pK3_.args[0]/a1, pK3_.args[1]/a2, pK3_.args[2]/a3]]
-
-sys.exit(0)
