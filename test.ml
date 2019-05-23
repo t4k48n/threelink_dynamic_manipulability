@@ -12,6 +12,16 @@ let all_true_tests =
   let t3 = try (ignore (all_true []); false) with | _ -> true in
   [t1; t2; t3]
 
+let uniform_tests =
+  let samples = Array.init 100000 (fun _ -> uniform 0. 1.) in
+  let t1 =
+    let is_in = Array.map (fun s -> 0. <= s && s <= 1.) samples in
+    Utils.all_true (Array.to_list is_in) in
+  let t2 =
+    let total = Array.fold_left ( +. ) 0. samples in
+    Utils.nearly_eq ~threshold:(1.0 *. 0.02) (total /. float (Array.length samples)) 0.5 in
+  [t1; t2]
+
 open Model
 
 let eq_point_tests =
@@ -87,4 +97,6 @@ let () =
   assert (Utils.all_true det_mat_tests);
   assert (Utils.all_true trans_mat_tests);
   assert (Utils.all_true inv_mat_tests);
-  assert (Utils.all_true matmul_tests)
+  assert (Utils.all_true matmul_tests);
+  assert (Utils.all_true uniform_tests);
+  print_endline "all the tests are passed"
