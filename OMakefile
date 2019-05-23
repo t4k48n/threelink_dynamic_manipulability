@@ -10,13 +10,6 @@ OCamlProgram(main, model utils main)
 
 OCamlProgram(test, test utils model)
 
-MyFunc(x) =
-  .PHONY: $(x)
-  $(x):
-    echo $(x)
-
-MyFunc(myecho)
-
 .PHONY: clean
 
 clean:

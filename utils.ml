@@ -13,3 +13,27 @@ let all_true = function
 let uniform a b =
   if a > b then failwith "a > b";
   Random.float (b -. a) +. a
+
+(* Generate an array [|a; a+.d; a+.d+.d; ...; b|].
+ * The length of the array is n. As the example, a and b are included. *)
+let array_linspace a b n =
+  if a > b then failwith "a > b";
+  match n with
+    | 0 -> [||]
+    | 1 -> [|a|]
+    | _ as n -> begin
+        let d = (b -. a) /. (float @@ n - 1) in
+        Array.init n (fun i -> a +. float i *. d)
+      end
+
+(* Generate an list [|a; a+.d; a+.d+.d; ...; b|].
+ * The length of the list is n. As the example, a and b are included. *)
+let list_linspace a b n =
+  if a > b then failwith "a > b";
+  match n with
+    | 0 -> []
+    | 1 -> [a]
+    | _ as n -> begin
+        let d = (b -. a) /. (float @@ n - 1) in
+        List.init n (fun i -> a +. float i *. d)
+      end
