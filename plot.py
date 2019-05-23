@@ -32,17 +32,27 @@ q2, q3, dm_mean, dm_std, dm_std_mean = numpy.array(
 
 equivalent_line = -q2 + numpy.pi
 
-pyplot.figure("mean 2D", figsize=(80 / 25.4, 60 / 25.4))
-pyplot.scatter(q2, q3, c=dm_mean, cmap="jet", marker="s")
-pyplot.colorbar()
-pyplot.plot(q2, equivalent_line, linewidth=3, color="k", linestyle="-.")
+fig = pyplot.figure("std 2D", figsize=(80 / 25.4, 60 / 25.4))
+pyplot.scatter(q2 * 180 / numpy.pi, q3 * 180 / numpy.pi, c=dm_std, cmap="gray", marker="s", s=6.5)
+cb = pyplot.colorbar()
+cb.set_label("Std. dev.")
+pyplot.plot(q2 * 180 / numpy.pi, equivalent_line * 180 / numpy.pi, linewidth=1.5, color="k", linestyle="-.")
 pyplot.gca().set_aspect(1)
+pyplot.xlabel("q2 [deg]")
+pyplot.ylabel("q3 [deg]")
+fig.subplots_adjust(top=0.965, bottom=0.218, left=0.145, right=0.87, hspace=0.2, wspace=0.2)
+fig.savefig("dm_std.pdf")
 
-pyplot.figure("std 2D", figsize=(80 / 25.4, 60 / 25.4))
-pyplot.scatter(q2, q3, c=dm_std, cmap="jet", marker="s")
-pyplot.colorbar()
-pyplot.plot(q2, equivalent_line, linewidth=3, color="k", linestyle="-.")
+fig = pyplot.figure("mean 2D", figsize=(80 / 25.4, 60 / 25.4))
+pyplot.scatter(q2 * 180 / numpy.pi, q3 * 180 / numpy.pi, c=dm_mean, cmap="gray", marker="s", s=6.5)
+cb = pyplot.colorbar()
+cb.set_label("Mean")
+pyplot.plot(q2 * 180 / numpy.pi, equivalent_line * 180 / numpy.pi, linewidth=1.5, color="k", linestyle="-.")
 pyplot.gca().set_aspect(1)
+pyplot.xlabel("q2 [deg]")
+pyplot.ylabel("q3 [deg]")
+fig.subplots_adjust(top=0.965, bottom=0.218, left=0.145, right=0.87, hspace=0.2, wspace=0.2)
+fig.savefig("dm_mean.pdf")
 
 q2, q3, dm_mean, dm_std, dm_std_mean = numpy.array(
     sorted([[q2, q3, dmm, dms, dmsm]
@@ -50,9 +60,14 @@ q2, q3, dm_mean, dm_std, dm_std_mean = numpy.array(
                 in zip(q2, q3, dm_mean, dm_std, dm_std_mean)
              if abs(q2 + q3 - numpy.pi) <= 1E-3], key=lambda x: x[0])).T
 
-pyplot.figure("mean +- std", figsize=(80 / 25.4, 60 / 25.4))
-pyplot.plot(q2, dm_mean)
-pyplot.plot(q2, dm_mean + dm_std)
-pyplot.plot(q2, dm_mean - dm_std)
+fig = pyplot.figure("mean +- std", figsize=(80 / 25.4, 60 / 25.4))
+pyplot.plot(q2 * 180 / numpy.pi, dm_mean, color="k",linestyle="-.", label="Mean")
+pyplot.plot(q2 * 180 / numpy.pi, dm_mean + dm_std, color="k",linestyle="-", label="Mean +- S. dev.")
+pyplot.plot(q2 * 180 / numpy.pi, dm_mean - dm_std, color="k",linestyle="-")
+pyplot.xlabel("q2 (= 180 - q3) [deg]")
+pyplot.ylabel("Dynamic manip.")
+pyplot.legend()
+fig.tight_layout(pad=0.5)
+fig.savefig("dm_dist.pdf")
 
 pyplot.show()
