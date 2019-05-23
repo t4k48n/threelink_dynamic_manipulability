@@ -22,6 +22,30 @@ let uniform_tests =
     Utils.nearly_eq ~threshold:(1.0 *. 0.02) (total /. float (Array.length samples)) 0.5 in
   [t1; t2]
 
+let array_linspace_test =
+  let t1 =
+    Utils.all_true
+      @@ Array.to_list
+        @@ Array.map2 Utils.nearly_eq (array_linspace 0. 1. 3) [|0.; 0.5; 1.|] in
+  let t2 =
+    Utils.all_true
+      @@ Array.to_list
+        @@ Array.map2 Utils.nearly_eq (array_linspace 0. 1. 1) [|0.|] in
+  let t3 =
+    (array_linspace 0. 1. 0) = [||] in
+  [t1; t2; t3]
+
+let list_linspace_test =
+  let t1 =
+    Utils.all_true
+      @@ List.map2 Utils.nearly_eq (list_linspace 0. 1. 3) [0.; 0.5; 1.] in
+  let t2 =
+    Utils.all_true
+      @@ List.map2 Utils.nearly_eq (list_linspace 0. 1. 1) [0.] in
+  let t3 =
+    (list_linspace 0. 1. 0) = [] in
+  [t1; t2; t3]
+
 open Model
 
 let eq_point_tests =
@@ -99,4 +123,6 @@ let () =
   assert (Utils.all_true inv_mat_tests);
   assert (Utils.all_true matmul_tests);
   assert (Utils.all_true uniform_tests);
+  assert (Utils.all_true array_linspace_test);
+  assert (Utils.all_true list_linspace_test);
   print_endline "all the tests are passed"
